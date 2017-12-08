@@ -1,0 +1,25 @@
+---
+- name: bootstrap
+  hosts: all
+  gather_facts: False
+  pre_tasks:
+  - name: install python
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    changed_when: False
+  - setup: # aka gather_facts
+
+- name: apply common role
+  hosts: all
+  roles:
+  - common
+
+- name: apply dnsmasq role
+  hosts: dnsmasq
+  roles:
+  - dnsmasq
+
+- name: apply smartdns role
+  hosts: smartdns
+  roles:
+  - sniproxy
+  - dnsmasq

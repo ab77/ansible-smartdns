@@ -1,0 +1,83 @@
+# cross environment
+ansible_ssh_user: root
+resolvers:
+  - 8.8.8.8
+  - 8.8.4.4
+dnsmasq_listen_addresses:
+  - "{{ ansible_default_ipv4.address }}"
+  - "{% if 'address' in ansible_default_ipv6 %}{{ ansible_default_ipv6.address }}{% endif %}"
+sniproxy_version: 0.5.0
+sniproxy_mode: mode ipv4_only
+bypass_sub_domains:
+proxy_domains:
+  - akadns.net
+  - akam.net
+  - akamai.com
+  - akamai.net
+  - akamaiedge.net
+  - akamaihd.net
+  - akamaistream.net
+  - akamaitech.net
+  - akamaitechnologies.com
+  - akamaitechnologies.fr
+  - akamaized.net
+  - edgekey.net
+  - edgesuite.net
+  - srip.net
+  - footprint.net
+  - llnwd.net
+  - edgecastcdn.net
+  - cloudfront.net
+  - netflix.com
+  - netflix.net
+  - nflximg.net
+  - nflxvideo.net
+  - nflxso.net
+  - nflxext.com
+  - hulu.com
+  - huluim.com
+  - hbonow.com
+  - hbogo.com
+  - amazon.com
+  - ssl-images-amazon.com
+  - amazon.co.uk
+  - crackle.com
+  - pandora.com
+  - vudu.com
+  - blinkbox.com
+  - abc.com
+  - fox.com
+  - theplatform.com
+  - nbc.com
+  - nbcuni.com
+  - ip2location.com
+  - pbs.org
+  - warnerbros.com
+  - cc.com
+  - cbs.com
+  - brightcove.com
+  - cwtv.com
+  - spike.com
+  - go.com
+  - mtv.com
+  - mtvnservices.com
+  - playstation.net
+  - uplynk.com
+  - maxmind.com
+  - disney.com
+  - disneyjunior.com
+  - xboxlive.com
+  - lovefilm.com
+  - turner.com
+  - amctv.com
+  - sho.com
+  - mog.com
+  - wdtvlive.com
+  - beinsportsconnect.tv
+  - beinsportsconnect.net
+  - fig.bbc.co.uk
+  - open.live.bbc.co.uk
+  - sa.bbc.co.uk
+  - www.bbc.co.uk
+  - crunchyroll.com
+  - ifconfig.co

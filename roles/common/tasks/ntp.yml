@@ -1,0 +1,19 @@
+---
+- name: install dependency
+  apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+  - { name: ntp, state: latest }
+  - { name: ntpdate, state: latest }
+  tags: ntp
+
+- name: start ntp service
+  service: name=ntp state=stopped enabled=yes
+  tags: ntp
+
+- name: update time/date
+  command: ntpdate pool.ntp.org
+  ignore_errors: yes
+  notify: restart ntp
+  tags: ntp

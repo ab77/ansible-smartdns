@@ -1,0 +1,21 @@
+---
+- name: install dnsmasq"
+  apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    dpkg_options: force-confnew
+  with_items:
+  - { name: dnsmasq, state: latest }
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  notify:
+  - restart dnsmasq systemd service
+  - restart dnsmasq upstart service
+  tags: dnsmasq
+
+- name: configure dnsmasq
+  template: src=dnsmasq.conf.j2 dest=/etc/dnsmasq.d/dnsmasq.conf backup=yes
+  notify:
+  - restart dnsmasq systemd service
+  - restart dnsmasq upstart service
+  tags: dnsmasq

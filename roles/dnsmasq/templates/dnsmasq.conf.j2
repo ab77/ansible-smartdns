@@ -1,0 +1,33 @@
+{% if dnsmasq_listen_addresses %}
+listen-address=127.0.0.1
+{% for ipaddr in dnsmasq_listen_addresses %}
+{% if ipaddr %}
+listen-address={{ ipaddr }}
+{% endif %}
+{% endfor %}
+{% else %}
+bind-dynamic
+{% endif %}
+no-resolv
+{% for resolver in resolvers %}
+server={{ resolver }}
+{% endfor %}
+bogus-priv
+domain-needed
+log-facility=-
+local-ttl=60
+{% if bypass_sub_domains %}
+{% for sub_domain in bypass_sub_domains %}
+{% for resolver in resolvers %}
+server=/{{ sub_domain }}/{{ resolver }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% if proxy_domains %}
+{% for domain in proxy_domains %}
+address=/{{ domain }}/{{ ansible_default_ipv4.address }}
+{% if 'address' in ansible_default_ipv6 %}
+address=/{{ domain }}/{{ ansible_default_ipv6.address }}
+{% endif %}
+{% endfor %}
+{% endif %}

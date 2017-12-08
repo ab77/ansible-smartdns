@@ -1,0 +1,35 @@
+user daemon
+
+pidfile /var/run/sniproxy.pid
+
+resolver {
+    {% for resolver in resolvers %}
+    nameserver {{ resolver }}
+    {% endfor %}
+    {{ sniproxy_mode }}
+}
+
+error_log {
+    syslog daemon
+    priority notice
+}
+
+listen 80 {
+    proto http
+    access_log {
+        filename /var/log/sniproxy/http_access.log
+        priority notice
+    }
+}
+
+listen 443 {
+    proto tls
+    access_log {
+        filename /var/log/sniproxy/https_access.log
+        priority notice
+    }
+}
+
+table {
+    .* *
+}

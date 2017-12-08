@@ -1,0 +1,7 @@
+---
+- include_tasks: debug.yml
+- include_tasks: apt.yml
+- include_tasks: ntp.yml
+- include_tasks: python.yml
+- include_tasks: iptables.yml
+- include_tasks: ip6tables.yml

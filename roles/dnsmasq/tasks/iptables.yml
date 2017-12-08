@@ -1,0 +1,12 @@
+---
+- name: install dnsmasq firewall rules
+  iptables_raw:
+    name: dnsmasq_rules
+    weight: 10
+    keep_unmanaged: no
+    rules: |
+      -A INPUT -i {{ ansible_default_ipv4.interface }} -s {{ item }} -p udp -m multiport --dports 53 -j ACCEPT
+  with_lines: cat "{{ playbook_dir }}/environments/{{ env }}/files/ip_whitelist.txt"
+  notify:
+  - save iptables
+  tags: dnsmasq 

@@ -1,0 +1,13 @@
+---
+- name: install dnsmasq firewall rules (IPv6)
+  iptables_raw:
+    name: dnsmasq_rules
+    ipversion: 6
+    weight: 10
+    keep_unmanaged: no
+    rules: |
+      -A INPUT -i {{ ansible_default_ipv6.interface }} -s {{ item }} -p tcp -m multiport --dports 80,443 -j ACCEPT
+  with_lines: cat "{{ playbook_dir }}/environments/{{ env }}/files/ip6_whitelist.txt"
+  notify:
+  - save ip6tables
+  tags: dnsmasq 

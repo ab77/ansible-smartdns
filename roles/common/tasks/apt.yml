@@ -1,0 +1,32 @@
+---
+- name: autoremove unused packages
+  command: apt-get -qy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" autoremove
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  register: autoremove_output
+  changed_when: "'The following packages will be REMOVED' in autoremove_output.stdout"
+  tags: apt
+
+- name: upgrade all installed packages
+  apt: upgrade=dist update_cache=yes autoremove=yes purge=yes dpkg_options=force-confnew
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  ignore_errors: yes
+  tags: apt
+
+- name: install dependency"
+  apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    dpkg_options: force-confnew
+  with_items:
+  - { name: curl, state: latest }
+  - { name: vim, state: latest }
+  - { name: sudo, state: latest }
+  - { name: git, state: latest }
+  - { name: dnsutils, state: latest }
+  - { name: inetutils-traceroute, state: latest }
+  - { name: iptables-persistent, state: latest }
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  tags: apt

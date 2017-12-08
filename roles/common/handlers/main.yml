@@ -1,0 +1,9 @@
+---
+- name: restart ntp
+  service: name=ntp state=restarted
+
+- name: save iptables
+  command: iptables-save
+
+- name: save ip6tables
+  command: ip6tables-save

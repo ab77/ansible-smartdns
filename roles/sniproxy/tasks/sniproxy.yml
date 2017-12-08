@@ -1,0 +1,51 @@
+---
+- name: install build dependencies"
+  apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    dpkg_options: force-confnew
+  with_items:
+  - { name: autotools-dev, state: latest }
+  - { name: cdbs, state: latest }
+  - { name: debhelper, state: latest }
+  - { name: dh-autoreconf, state: latest }
+  - { name: dpkg-dev, state: latest }
+  - { name: libev-dev, state: latest }
+  - { name: libpcre3-dev, state: latest }
+  - { name: libudns-dev, state: latest }
+  - { name: pkg-config, state: latest }
+  - { name: fakeroot, state: latest }
+  - { name: devscripts, state: latest }
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  tags: sniproxy 
+
+- name: build and install sniproxy
+  script: build-sniproxy.sh "{{ sniproxy_version }}"
+  args:
+    creates: /usr/sbin/sniproxy
+  notify:
+  - restart sniproxy systemd service
+  - restart sniproxy upstart service  
+  tags: sniproxy
+
+- name: configure sniproxy service
+  lineinfile: dest=/etc/default/sniproxy regexp='^#DAEMON_ARGS=' line='DAEMON_ARGS="-c /etc/sniproxy.conf"' backup=yes
+  notify:
+  - restart sniproxy systemd service
+  - restart sniproxy upstart service
+  tags: sniproxy
+
+- name: enable sniproxy service
+  lineinfile: dest=/etc/default/sniproxy regexp='^ENABLED=0' line='ENABLED=1' backup=yes
+  notify:
+  - restart sniproxy systemd service
+  - restart sniproxy upstart service
+  tags: sniproxy
+
+- name: configure sniproxy
+  template: src=sniproxy.conf.j2 dest=/etc/sniproxy.conf backup=yes
+  notify:
+  - restart sniproxy systemd service
+  - restart sniproxy upstart service
+  tags: sniproxy

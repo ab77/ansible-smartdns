@@ -1,0 +1,20 @@
+---
+- name: enumerate init system
+  debug: msg="host {{ inventory_hostname }} running {{ ansible_service_mgr }}"
+  ignore_errors: yes
+
+- name: restart dnsmasq systemd service
+  ignore_errors: yes
+  when: "ansible_service_mgr == 'systemd'"
+  systemd: state=restarted daemon_reload=yes enabled=yes name=dnsmasq
+
+- name: restart dnsmasq upstart service
+  ignore_errors: yes
+  when: "ansible_service_mgr == 'upstart'"
+  service: sleep=3 name=dnsmasq state=restarted enabled=yes
+
+- name: save iptables
+  command: iptables-save
+
+- name: save ip6tables
+  command: ip6tables-save

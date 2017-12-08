@@ -1,0 +1,17 @@
+---
+- name: install dependency"
+  apt:
+    name: "{{ item.name }}"
+    state: latest
+  with_items:
+  - { name: python-setuptools }
+  - { name: python-pip }
+  tags: python
+
+- name: pip upgrade 
+  pip: name=pip state=latest
+  tags: python
+
+- name: setuptools upgrade
+  pip: name=setuptools state=latest
+  tags: python
